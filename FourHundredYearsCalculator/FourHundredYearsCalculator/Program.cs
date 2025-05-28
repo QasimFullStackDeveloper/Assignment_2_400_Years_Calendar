@@ -5,8 +5,10 @@ class Program
 {
     static void Main(string[] args)
     {
+        Console.Title = "400-Year Calendar Generator";
+        const int startYear = 1625;
+        const int endYear = 2025;
 
-        
     }
 
     static void PrintMonthCalendar(int year, int month)
@@ -32,5 +34,11 @@ class Program
         }
 
         Console.WriteLine();
+    }
+
+    static void PauseAndReturn()
+    {
+        Console.WriteLine("\n\nPress any key to return to the main menu...");
+        Console.ReadKey();
     }
 }

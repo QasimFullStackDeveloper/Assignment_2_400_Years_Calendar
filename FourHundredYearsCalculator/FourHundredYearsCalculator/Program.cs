@@ -8,13 +8,7 @@ class Program
         Console.Write("Enter a starting year: ");
         if (int.TryParse(Console.ReadLine(), out int startYear))
         {
-            for (int year = startYear; year < startYear + 400; year++)
-            {
-                for (int month = 1; month <= 12; month++)
-                {
-                    PrintMonthCalendar(year, month);
-                }
-            }
+            PaginateCalendarDisplay(startYear);
         }
         else
         {
@@ -46,4 +40,31 @@ class Program
 
         Console.WriteLine();
     }
+
+    static void PaginateCalendarDisplay(int startYear, int totalYears = 400, int chunkSize = 100)
+    {
+        for (int i = 0; i < totalYears; i += chunkSize)
+        {
+            int currentStartYear = startYear + i;
+            int currentEndYear = Math.Min(currentStartYear + chunkSize - 1, startYear + totalYears - 1);
+
+            for (int year = currentStartYear; year <= currentEndYear; year++)
+            {
+                for (int month = 1; month <= 12; month++)
+                {
+                    PrintMonthCalendar(year, month);
+                }
+            }
+
+            if (i + chunkSize < totalYears)
+            {
+                Console.WriteLine($"\nDisplayed {chunkSize} years from {currentStartYear} to {currentEndYear}.");
+                Console.Write("Press 'Enter' to view the next 100 years or type 'exit' to stop: ");
+                string input = Console.ReadLine();
+                if (input?.ToLower() == "exit")
+                    break;
+            }
+        }
+    }
+
 }

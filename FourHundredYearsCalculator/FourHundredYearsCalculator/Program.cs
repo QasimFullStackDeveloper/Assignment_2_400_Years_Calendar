@@ -5,15 +5,23 @@ class Program
 {
     static void Main(string[] args)
     {
+        Console.Title = "Paginated Calendar Viewer\n";
+
         Console.Write("Enter a starting year: ");
-        if (int.TryParse(Console.ReadLine(), out int startYear))
-        {
-            PaginateCalendarDisplay(startYear);
-        }
-        else
+        if (!int.TryParse(Console.ReadLine(), out int startYear))
         {
             Console.WriteLine("Invalid input. Please enter a valid year.");
+            return;
         }
+
+        Console.Write("Enter how many years you want to display at a time (e.g., 25, 50, 100): ");
+        if (!int.TryParse(Console.ReadLine(), out int chunkSize) || chunkSize <= 0)
+        {
+            Console.WriteLine("Invalid input. Please enter a positive number.");
+            return;
+        }
+
+        PaginateCalendarDisplay(startYear, 400, chunkSize);
     }
 
     static void PrintMonthCalendar(int year, int month)
@@ -41,7 +49,7 @@ class Program
         Console.WriteLine();
     }
 
-    static void PaginateCalendarDisplay(int startYear, int totalYears = 400, int chunkSize = 100)
+    static void PaginateCalendarDisplay(int startYear, int totalYears, int chunkSize)
     {
         for (int i = 0; i < totalYears; i += chunkSize)
         {
@@ -50,6 +58,7 @@ class Program
 
             for (int year = currentStartYear; year <= currentEndYear; year++)
             {
+                Console.WriteLine($"\n==== Calendar for Year {year} ====\n");
                 for (int month = 1; month <= 12; month++)
                 {
                     PrintMonthCalendar(year, month);
@@ -59,9 +68,9 @@ class Program
             if (i + chunkSize < totalYears)
             {
                 Console.WriteLine($"\nDisplayed {chunkSize} years from {currentStartYear} to {currentEndYear}.");
-                Console.Write("Press 'Enter' to view the next 100 years or type 'exit' to stop: ");
-                string input = Console.ReadLine();
-                if (input?.ToLower() == "exit")
+                Console.Write("Press 'Enter' to view the next set or type 'exit' to stop: ");
+                string? input = Console.ReadLine();
+                if (input?.Trim().ToLower() == "exit")
                     break;
             }
         }

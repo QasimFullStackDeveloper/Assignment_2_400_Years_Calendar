@@ -24,50 +24,56 @@ class Program
         PaginateCalendarDisplay(startYear, 400, chunkSize);
     }
 
-    static void PrintMonthCalendar(int year, int month)
+    static List<string> GetMonthCalendarLines(int year, int month)
     {
         string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month);
-        Console.WriteLine($"\n{monthName} {year}");
-        Console.WriteLine("Su Mo Tu We Th Fr Sa");
+        List<string> lines = new List<string>();
+
+        lines.Add($"{monthName,-20}"); // removed year from here
+        lines.Add("Su Mo Tu We Th Fr Sa");
 
         DateTime firstDay = new DateTime(year, month, 1);
         int startDay = (int)firstDay.DayOfWeek;
         int daysInMonth = DateTime.DaysInMonth(year, month);
 
-        for (int i = 0; i < startDay; i++)
-        {
-            Console.Write("   ");
-        }
-
+        string week = new string(' ', startDay * 3);
         for (int day = 1; day <= daysInMonth; day++)
         {
-            Console.Write($"{day,2} ");
-            if ((startDay + day) % 7 == 0)
-                Console.WriteLine();
+            week += $"{day,2} ";
+            if ((startDay + day) % 7 == 0 || day == daysInMonth)
+            {
+                lines.Add(week.TrimEnd());
+                week = "";
+            }
         }
 
-        Console.WriteLine();
+        return lines;
     }
+
+
 
     static void PaginateCalendarDisplay(int startYear, int totalYears, int chunkSize)
     {
-        for (int i = 0; i < totalYears; i += chunkSize)
-        {
-            int currentStartYear = startYear + i;
-            int currentEndYear = Math.Min(currentStartYear + chunkSize - 1, startYear + totalYears - 1);
+        int endYear = startYear + totalYears - 1;
 
-            for (int year = currentStartYear; year <= currentEndYear; year++)
+        for (int year = startYear; year <= endYear; year += chunkSize)
+        {
+            int currentEndYear = Math.Min(year + chunkSize - 1, endYear);
+
+            for (int y = year; y <= currentEndYear; y++)
             {
-                Console.WriteLine($"\n==== Calendar for Year {year} ====\n");
-                for (int month = 1; month <= 12; month++)
+                Console.WriteLine($"\n============== Year {y} ==============\n");
+
+                for (int m = 1; m <= 12; m += 3)
                 {
-                    PrintMonthCalendar(year, month);
+                    PrintMonthsRow(y, m, 3);
+                    Console.WriteLine();
                 }
             }
 
-            if (i + chunkSize < totalYears)
+            if (currentEndYear < endYear)
             {
-                Console.WriteLine($"\nDisplayed {chunkSize} years from {currentStartYear} to {currentEndYear}.");
+                Console.WriteLine($"\nDisplayed years {year} to {currentEndYear}.");
                 Console.Write("Press 'Enter' to view the next set or type 'exit' to stop: ");
                 string? input = Console.ReadLine();
                 if (input?.Trim().ToLower() == "exit")
@@ -75,5 +81,8 @@ class Program
             }
         }
     }
+
+
+
 
 }

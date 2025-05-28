@@ -82,6 +82,30 @@ class Program
         }
     }
 
+static void PrintMonthsRow(int year, int startMonth, int monthsPerRow)
+    {
+        List<List<string>> calendars = new List<List<string>>();
+
+        for (int m = 0; m < monthsPerRow; m++)
+        {
+            int month = startMonth + m;
+            if (month > 12) break;
+            calendars.Add(GetMonthCalendarLines(year, month));
+        }
+
+        int maxLines = calendars.Max(cal => cal.Count);
+        for (int line = 0; line < maxLines; line++)
+        {
+            foreach (var cal in calendars)
+            {
+                if (line < cal.Count)
+                    Console.Write(cal[line].PadRight(22));
+                else
+                    Console.Write(new string(' ', 22));
+            }
+            Console.WriteLine();
+        }
+    }
 
 
 

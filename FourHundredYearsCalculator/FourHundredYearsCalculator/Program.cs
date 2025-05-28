@@ -71,4 +71,16 @@ while (true)
         Console.WriteLine("\n\nPress any key to return to the main menu...");
         Console.ReadKey();
     }
+static void PrintFullCalendar(int startYear, int endYear)
+{
+    for (int year = startYear; year <= endYear; year++)
+    {
+        Console.WriteLine($"\n\n==== Calendar for Year {year} ====\n");
+        for (int month = 1; month <= 12; month++)
+        {
+            PrintMonthCalendar(year, month);
+        }
+    }
+}
+
 }
